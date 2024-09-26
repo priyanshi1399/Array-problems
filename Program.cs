@@ -1,94 +1,83 @@
-﻿namespace MajorityElementnby2Times
+﻿namespace _62._Unique_Paths
 {
     internal class Program
     {
 
-        #region BruteForce
-        //public static int majorityElement(int[] arr)
+
+
+        #region brute force but goes to TLE.
+        //public static void Main(string[] args)
         //{
-        //    Dictionary<int, int> d1 = new Dictionary<int, int>();
-        //    int n = arr.Length;
-        //    for (int i = 0; i < n; i++)
-        //    {
-        //        if (d1.ContainsKey(arr[i]))
-        //        {
-        //            d1[arr[i]]++;
-        //        }
-        //        else
-        //        {
-        //            d1[arr[i]] = 1;
-        //        }
-        //    }
-
-        //    foreach (KeyValuePair<int, int> entry in d1)
-        //    {
-        //        if (entry.Value > n / 2)
-        //        {
-        //            return entry.Key;
-        //        }
-        //    }
-        //    return -1;
-
+        //    int m = 3;
+        //    int n = 2;
+        //    int k = UniquePaths(m, n);
         //}
 
-        //static void Main(string[] args)
+        //public static int UniquePaths(int m, int n)
         //{
-        //    int[] arr = { 2, 2, 1, 1, 1, 2, 2 };
-        //    int ans = majorityElement(arr);
+        //    return CountPath(0, 0, m, n);
+        //}
 
+        //public static int CountPath(int i, int j, int m, int n)
+        //{
+        //    if (i >= n || j >= m)
+        //    {
+        //        return 0; //out of value in  m or n
+        //    }
+        //    if (i == n - 1 && j == m - 1) //last element return 1
+        //    {
+        //        return 1;
+        //    }
+        //    else return CountPath(i + 1, j, m, n) + CountPath(i, j + 1, m, n);
         //} 
         #endregion
 
 
-
-
-        public static int majorityElement(int[] arr)
+        public static int CountPaths(int i, int j, int m, int n, int[,] matrix)
         {
-            int n = arr.Length;
-            int cnt = 0;
-            int ele = 0;
-
-
-            for (int i = 0; i < n; i++)
+            if (i == (n - 1) && j == (m - 1))
             {
-                if (cnt == 0)
-                {
-                    cnt = 1;
-                    ele = arr[i];
-                }
-                else if (ele == arr[i])
-                {
-                    cnt++;
-                }
-                else
-                {
-                    cnt--;
-                }
+                return 1;
             }
-
-            //checking if element stored id the majority element
-
-            int cnt1 = 0;
-            for (int i = 0; i < n; i++)
+            if (i >= n || j >= m)
             {
-                if (arr[i] == ele)
-                {
-                    cnt1++;
-                }
+                return 0;
             }
-            if (cnt1 > (n / 2))
+            if (matrix[i, j] != -1)
             {
-                return ele;
+                return matrix[i, j];
             }
-
-            return -1;
+            else
+            {
+                matrix[i, j] = CountPaths(i + 1, j, m, n, matrix) + CountPaths(i, j + 1, m, n, matrix);
+                return matrix[i, j];
+            }
         }
 
-        static void Main(string[] args)
+        public static int UniquePaths(int m, int n)
         {
-            int[] arr = { 2, 2, 1, 1, 1, 2, 2 };
-            int ans = majorityElement(arr);
+            int[,] matrix = new int[m+1, n+1];
+            for (int i = 0; i < m+1; i++)
+            {
+                for (int j = 0; j < n+1; j++)
+                {
+                    matrix[i, j] = -1;
+                }
+            }
 
+            int num = CountPaths(0, 0, m, n, matrix);
+            if (m == 1 && n == 1)
+            {
+                return num;
+            }
+            return matrix[0, 0];
+        }
+
+        public static void Main(string[] args)
+        {
+
+            int totalCount = UniquePaths(3, 2);
+            Console.WriteLine("The total number of Unique Paths are " + totalCount);
         }
 
 
